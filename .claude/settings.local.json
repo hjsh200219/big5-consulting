@@ -6,7 +6,11 @@
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(echo:*)",
+      "Read(//Users/hoshin/.big5/**)",
+      "Bash(git log:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

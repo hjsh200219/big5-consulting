@@ -37,20 +37,22 @@ export class SurveyManager {
     const maxQuestions = version === 'short' ? 30 : 60;
     const isShort = version === 'short';
 
+    // 첫 5문항 랜덤 제공 (빈 배열 = 아직 답변한 질문 없음)
+    const questions = getRandomQuestions([], isShort);
+
     const session: SurveySession = {
       id: `survey_${randomUUID()}`,
       name: params.name,
       version,
       answered_count: 0,
       answers: {},
+      current_questions: questions.map(q => q.number), // 현재 질문 번호 저장
       metadata: params.metadata || {},
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
 
     await this.storage.saveSurveySession(session);
-
-    const questions = getRandomQuestions(0, isShort);
 
     return {
       session_id: session.id,
@@ -88,13 +90,21 @@ export class SurveyManager {
     const isShort = session.version === 'short';
     const maxQuestions = isShort ? 30 : 60;
 
-    // 현재 화면의 질문들을 가져와서 질문 번호를 얻음
-    const currentQuestions = getRandomQuestions(session.answered_count, isShort);
+    // 현재 화면에 보여준 질문 번호 목록 (세션에 저장되어 있음)
+    const currentQuestionNumbers = session.current_questions || [];
+
+    if (currentQuestionNumbers.length === 0) {
+      throw new Error('No current questions found in session. Please restart the survey.');
+    }
+
+    if (params.answers.length > currentQuestionNumbers.length) {
+      throw new Error(`Too many answers. Expected ${currentQuestionNumbers.length}, got ${params.answers.length}`);
+    }
 
     // 각 질문 번호와 답변을 매핑하여 저장
-    currentQuestions.forEach((question, index) => {
+    currentQuestionNumbers.forEach((questionNumber, index) => {
       if (index < params.answers!.length) {
-        session.answers[question.number] = params.answers![index];
+        session.answers[questionNumber] = params.answers![index];
       }
     });
 
@@ -134,9 +144,13 @@ export class SurveyManager {
       };
     } else {
       // 아직 완료되지 않음 - 다음 질문 로드
-      await this.storage.saveSurveySession(session);
+      // 이미 답변한 질문 번호 배열 생성
+      const answeredQuestionNumbers = Object.keys(session.answers).map(Number);
+      const nextQuestions = getRandomQuestions(answeredQuestionNumbers, isShort);
 
-      const nextQuestions = getRandomQuestions(session.answered_count, isShort);
+      // 다음 질문 번호를 세션에 저장
+      session.current_questions = nextQuestions.map(q => q.number);
+      await this.storage.saveSurveySession(session);
 
       return {
         session_id: session.id,
@@ -165,7 +179,13 @@ export class SurveyManager {
     const isShort = session.version === 'short';
     const maxQuestions = isShort ? 30 : 60;
 
-    const questions = getRandomQuestions(session.answered_count, isShort);
+    // 이미 답변한 질문 번호 배열 생성
+    const answeredQuestionNumbers = Object.keys(session.answers).map(Number);
+    const questions = getRandomQuestions(answeredQuestionNumbers, isShort);
+
+    // 새로운 질문 번호를 세션에 저장
+    session.current_questions = questions.map(q => q.number);
+    await this.storage.saveSurveySession(session);
 
     return {
       session_id: session.id,

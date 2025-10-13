@@ -165,27 +165,29 @@ export const QUESTIONS: Record<string, Question[]> = {
 };
 
 /**
- * 랜덤하게 5개 질문 선택
- * @param answered_count 이미 답변한 질문 수 (0-60 or 0-30)
+ * 랜덤하게 5개 질문 선택 (중복 방지)
+ * @param answered_questions 이미 답변한 질문 번호 배열
  * @param short_version true일 경우 30문항 간략 버전 사용
- * @returns 5개 질문 배열 (질문 번호, 텍스트만 포함)
+ * @returns 최대 5개 질문 배열 (질문 번호, 텍스트만 포함)
  */
-export function getRandomQuestions(answered_count: number, short_version: boolean = false): Question[] {
+export function getRandomQuestions(answered_questions: number[], short_version: boolean = false): Question[] {
   const questionPool = short_version ? SHORT_QUESTIONS : ALL_QUESTIONS;
   const maxQuestions = short_version ? 30 : 60;
 
   // 이미 모든 질문에 답변한 경우 빈 배열 반환
-  if (answered_count >= maxQuestions) {
+  if (answered_questions.length >= maxQuestions) {
     return [];
   }
 
-  // 전체 질문을 랜덤하게 섞음
-  const shuffled = [...questionPool].sort(() => Math.random() - 0.5);
+  // 아직 답변하지 않은 질문만 필터링
+  const unansweredQuestions = questionPool.filter(q => !answered_questions.includes(q.number));
 
-  // 이미 답변한 질문은 제외하고 5개 선택 (또는 남은 질문 수만큼)
-  const startIndex = answered_count;
-  const batchSize = Math.min(5, maxQuestions - answered_count);
-  const batch = shuffled.slice(startIndex, startIndex + batchSize);
+  // 남은 질문을 랜덤하게 섞음
+  const shuffled = [...unansweredQuestions].sort(() => Math.random() - 0.5);
+
+  // 최대 5개 선택 (또는 남은 질문 수만큼)
+  const batchSize = Math.min(5, shuffled.length);
+  const batch = shuffled.slice(0, batchSize);
 
   // 측정 항목(trait) 정보를 제외하고 반환
   return batch.map(q => ({
