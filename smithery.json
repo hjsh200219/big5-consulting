@@ -1,0 +1,60 @@
+{
+  "name": "@hjsh200219/big5-consulting",
+  "version": "1.0.0",
+  "description": "Big 5 성격검사 및 종합 컨설팅 MCP 서버 - 개인/팀/관계 분석을 위한 심리학 기반 AI 도구",
+  "author": "hjsh200219",
+  "license": "ISC",
+  "homepage": "https://github.com/hjsh200219/big5-consulting#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hjsh200219/big5-consulting.git"
+  },
+  "categories": [
+    "productivity",
+    "education",
+    "analysis"
+  ],
+  "keywords": [
+    "big5",
+    "personality",
+    "psychology",
+    "consulting",
+    "assessment",
+    "team-analysis",
+    "career",
+    "korean"
+  ],
+  "mcpVersion": "1.0.0",
+  "sdk": "@modelcontextprotocol/sdk",
+  "entry": {
+    "command": "node",
+    "args": ["dist/index.js"]
+  },
+  "runtime": {
+    "node": ">=18.0.0"
+  },
+  "build": {
+    "install": "npm install",
+    "compile": "npm run build"
+  },
+  "features": {
+    "tools": [
+      "manage_survey",
+      "manage_profile",
+      "analyze_individual",
+      "analyze_team",
+      "analyze_relationship"
+    ],
+    "prompts": [],
+    "resources": []
+  },
+  "config": {
+    "env": {
+      "BIG5_LAZY_LOAD_SCHEMAS": {
+        "description": "Enable lazy loading of all tool schemas on first call",
+        "type": "boolean",
+        "default": false
+      }
+    }
+  }
+}
