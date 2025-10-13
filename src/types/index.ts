@@ -31,14 +31,13 @@ export interface QuestionnaireResponse {
   neuroticism: number[];
 }
 
-// 검사 세션
+// 검사 세션 (랜덤 출제 방식)
 export interface SurveySession {
   id: string;
   name: string;
-  current_trait: 'openness' | 'conscientiousness' | 'extraversion' | 'agreeableness' | 'neuroticism';
-  current_batch: 1 | 2;
-  responses: Partial<QuestionnaireResponse>;
-  completed_traits: string[];
+  version: 'short' | 'full'; // 간략(30문항) 또는 전체(60문항)
+  answered_count: number; // 답변 완료한 질문 수 (0-30 or 0-60)
+  answers: Record<number, number>; // 질문 번호 → 답변 (1-5) 매핑
   metadata?: Record<string, any>;
   created_at: string;
   updated_at: string;
@@ -73,6 +72,7 @@ export type RelationshipAnalysisType = 'compatibility' | 'communication_style' |
 export interface ManageSurveyParams {
   action: SurveyAction;
   name?: string;
+  version?: 'short' | 'full'; // 간략(30문항) 또는 전체(60문항), 기본값 'full'
   session_id?: string;
   answers?: number[];
   metadata?: Record<string, any>;
