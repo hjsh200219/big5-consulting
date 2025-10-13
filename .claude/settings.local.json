@@ -7,6 +7,7 @@
       "Bash(npx tsc:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
+      "Bash(git push:*)",
       "Bash(echo:*)",
       "Read(//Users/hoshin/.big5/**)",
       "Bash(git log:*)",

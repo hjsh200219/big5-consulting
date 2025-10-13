@@ -28,13 +28,11 @@ keywords:
 
 mcpVersion: "1.0.0"
 
-runtime: "typescript"
+runtime: "container"
 
 build:
-  command: "npm run build"
-  outputPath: "dist"
-
-entry: "dist/index.js"
+  dockerfile: "Dockerfile"
+  context: "."
 
 startCommand:
   type: "stdio"
