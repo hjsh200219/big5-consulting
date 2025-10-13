@@ -28,18 +28,16 @@ keywords:
 
 mcpVersion: "1.0.0"
 
-runtime: typescript
+runtime: "typescript"
 
 build:
-  install: "npm install"
-  compile: "npm run build"
+  command: "npm run build"
+  outputPath: "dist"
 
-entry:
-  command: "node"
-  args:
-    - "dist/index.js"
-  env:
-    NODE_VERSION: ">=18.0.0"
+entry: "dist/index.js"
+
+startCommand:
+  type: "stdio"
 
 features:
   tools:
