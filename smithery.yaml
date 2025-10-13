@@ -1,0 +1,61 @@
+name: "@hjsh200219/big5-consulting"
+version: "1.0.0"
+description: "Big 5 성격검사 및 종합 컨설팅 MCP 서버 - 개인/팀/관계 분석을 위한 심리학 기반 AI 도구"
+author: "hjsh200219"
+license: "ISC"
+homepage: "https://github.com/hjsh200219/big5-consulting#readme"
+
+repository:
+  type: git
+  url: "https://github.com/hjsh200219/big5-consulting.git"
+
+categories:
+  - productivity
+  - education
+  - analysis
+
+keywords:
+  - big5
+  - personality
+  - psychology
+  - consulting
+  - assessment
+  - team-analysis
+  - career
+  - korean
+  - mcp
+  - mcp-server
+
+mcpVersion: "1.0.0"
+
+runtime:
+  node: ">=18.0.0"
+
+build:
+  install: "npm install"
+  compile: "npm run build"
+
+entry:
+  command: "node"
+  args:
+    - "dist/index.js"
+
+features:
+  tools:
+    - name: "manage_survey"
+      description: "성격검사 관리 (시작, 답변 제출, 재개, 진행상황)"
+    - name: "manage_profile"
+      description: "프로필 관리 (생성, 조회, 수정, 삭제, 목록)"
+    - name: "analyze_individual"
+      description: "개인 분석 (성격, 강점/약점, 커리어, 학습스타일, 스트레스관리)"
+    - name: "analyze_team"
+      description: "팀 분석 (구성, 역할배분, 갈등예측, 소통, 협업)"
+    - name: "analyze_relationship"
+      description: "관계 분석 (호환성, 소통방법, 역학)"
+
+config:
+  env:
+    BIG5_LAZY_LOAD_SCHEMAS:
+      description: "Enable lazy loading of all tool schemas on first call"
+      type: "boolean"
+      default: false
