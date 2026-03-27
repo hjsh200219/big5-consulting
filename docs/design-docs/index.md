@@ -6,6 +6,7 @@ Big 5 Consulting MCP Server 설계 문서 색인.
 
 | 문서 | 설명 | 상태 |
 |------|------|------|
+| [core-beliefs.md](core-beliefs.md) | 에이전트 우선 운영 원칙 | Active |
 | [layer-rules.md](layer-rules.md) | 레이어 의존성 규칙 및 아키텍처 린트 | Active |
 
 ## 작성 가이드

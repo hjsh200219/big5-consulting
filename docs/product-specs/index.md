@@ -7,6 +7,7 @@ Big 5 Consulting MCP Server 제품 사양 색인.
 | 문서 | 설명 | 상태 |
 |------|------|------|
 | [../PRD.md](../PRD.md) | 제품 요구사항 정의서 (원본) | Active |
+| [../PRODUCT_SENSE.md](../PRODUCT_SENSE.md) | 제품 원칙 및 사용자 페르소나 | Active |
 
 ## 작성 가이드
 
