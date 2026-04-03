@@ -140,6 +140,11 @@ src/
 |------|------|
 | [docs/generated/db-schema.md](docs/generated/db-schema.md) | 데이터 스키마 (파일 기반 JSON) |
 
+### 제품 사양 (docs/product-specs/)
+| 파일 | 용도 |
+|------|------|
+| [docs/product-specs/index.md](docs/product-specs/index.md) | 제품 사양 문서 색인 |
+
 ### 참조 문서 (docs/references/)
 | 파일 | 용도 |
 |------|------|

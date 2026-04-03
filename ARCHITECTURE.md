@@ -100,7 +100,7 @@ Client → MCP Server → Tool Manager → StorageManager → ~/.big5/
 | `src/types/index.ts` | 111 | 공유 타입 정의 |
 | `src/schemas/index.ts` | 201 | MCP 도구 스키마 |
 | `src/services/storage.ts` | 203 | 파일 영속성 + 캐시 |
-| `src/data/questions.ts` | 331 | 질문지 60+30문항, 점수 계산 |
+| `src/data/questions.ts` | 332 | 질문지 60+30문항, 점수 계산 |
 | `src/tools/manageSurvey.ts` | 227 | 설문 세션 관리 |
 | `src/tools/manageProfile.ts` | 118 | 프로필 CRUD |
 | `src/tools/analyzeIndividual.ts` | 343 | 개인 분석 (6종) |
