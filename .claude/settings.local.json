@@ -8,11 +8,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(echo:*)",
       "Read(/Users/edb_development/.big5/**)",
       "Bash(git log:*)",
-      "Bash(git rm:*)",
-      "Bash(cat:*)"
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []
