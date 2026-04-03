@@ -48,3 +48,6 @@ coverage/
 *.tmp
 *.temp
 .cache/
+
+# Harness GC workspace
+_workspace/

@@ -24,7 +24,7 @@ export interface Profile {
 
 // 질문지 응답
 export interface QuestionnaireResponse {
-  openness: number[]; // 10개 응답 (1-5)
+  openness: number[]; // 12개(전체) 또는 6개(간략) 응답 (1-5)
   conscientiousness: number[];
   extraversion: number[];
   agreeableness: number[];

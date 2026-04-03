@@ -1,8 +1,9 @@
 import { Question } from '../types';
 
 /**
- * Big 5 성격검사 질문지 (총 50문항)
- * 각 특성당 10문항 (정방향 5개, 역방향 5개)
+ * Big 5 성격검사 질문지
+ * - 전체 버전: 60문항 (각 특성당 12문항 -- 6개 하위요인 x 2문항)
+ * - 간략 버전: 30문항 (각 특성당 6문항 -- 6개 하위요인 x 1문항)
  */
 interface QuestionWithTrait extends Question {
   trait: string;
@@ -215,8 +216,8 @@ export function getShortQuestions(): Question[] {
 
 /**
  * 질문 번호로 특성과 인덱스 찾기
- * @param question_number 질문 번호 (1-50 or 1-15)
- * @param short_version true일 경우 15문항 간략 버전에서 검색
+ * @param question_number 질문 번호 (1-60 or 1-30)
+ * @param short_version true일 경우 30문항 간략 버전에서 검색
  * @returns 특성명과 특성 내 인덱스
  */
 export function getQuestionInfo(question_number: number, short_version: boolean = false): { trait: string; trait_index: number } | null {

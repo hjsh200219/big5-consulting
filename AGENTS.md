@@ -1,4 +1,4 @@
-# agent.md -- Big 5 Consulting MCP Server
+# AGENTS.md -- Big 5 Consulting MCP Server
 
 **언어 규칙: 이 프로젝트에서는 항상 한글로 답변하세요. 기술 용어는 영문을 병기할 수 있습니다.**
 
@@ -106,7 +106,7 @@ src/
 ### 핵심 문서 (루트)
 | 파일 | 용도 |
 |------|------|
-| [agent.md](agent.md) | 에이전트 진입점, 프로젝트 개요 및 핵심 규칙 |
+| [AGENTS.md](AGENTS.md) | 에이전트 진입점, 프로젝트 개요 및 핵심 규칙 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | 도메인 맵, 레이어 구조, 의존성 방향 |
 
 ### 상세 문서 (docs/)
