@@ -83,3 +83,5 @@ src/
 ### 리팩토링
 1. ARCHITECTURE.md + docs/design-docs/layer-rules.md 확인
 2. docs/exec-plans/tech-debt-tracker.md 업데이트
+
+> Be concise. No filler. Straight to the point. Use fewer words.
