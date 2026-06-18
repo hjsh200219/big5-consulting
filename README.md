@@ -77,13 +77,15 @@ npm run build
 
 ### 기본 설정 (On-Demand Loading)
 
+`/path/to/big5-consulting`을 실제 클론한 경로로 변경하세요.
+
 ```json
 {
   "mcpServers": {
     "big5": {
       "command": "node",
       "args": [
-        "/Users/hoshin/workspace/big5-consulting/dist/index.js"
+        "/path/to/big5-consulting/dist/index.js"
       ]
     }
   }
@@ -100,7 +102,7 @@ npm run build
     "big5": {
       "command": "node",
       "args": [
-        "/Users/hoshin/workspace/big5-consulting/dist/index.js"
+        "/path/to/big5-consulting/dist/index.js"
       ],
       "env": {
         "BIG5_LAZY_LOAD_SCHEMAS": "true"
