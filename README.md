@@ -54,13 +54,13 @@ Claude Desktop용 Big 5 성격검사 및 종합 컨설팅 MCP 서버
 
 ### Smithery를 통한 설치 (권장)
 
-가장 쉬운 방법은 [Smithery](https://smithery.ai/server/@hjsh200219/big5-consulting)를 통한 설치입니다:
+가장 쉬운 방법은 [Smithery](https://smithery.ai/servers/hjsh200219/big5-consulting)를 통한 설치입니다:
 
 ```bash
-npx @smithery/cli install @hjsh200219/big5-consulting --client claude
+npx -y @smithery/cli@latest mcp add hjsh200219/big5-consulting --client claude
 ```
 
-또는 [Smithery 웹사이트](https://smithery.ai/server/@hjsh200219/big5-consulting)에서 "Install in Claude Desktop" 버튼을 클릭하세요.
+또는 [Smithery 웹사이트](https://smithery.ai/servers/hjsh200219/big5-consulting)에서 "Install in Claude Desktop" 버튼을 클릭하세요.
 
 ### 수동 설치
 
@@ -256,8 +256,18 @@ npm run dev
 # 빌드
 npm run build
 
+# Smithery 배포용 번들 생성
+npm run build:smithery-mcpb
+
 # 프로덕션 실행
 npm start
+```
+
+### Smithery 배포
+
+```bash
+npm run build:smithery-mcpb
+npx -y @smithery/cli@latest mcp publish ./big5-consulting-smithery.mcpb -n hjsh200219/big5-consulting
 ```
 
 ## 기술 스택

@@ -5,6 +5,7 @@ package-lock.json
 # Build output
 dist/
 *.tsbuildinfo
+*.mcpb
 
 # Logs
 *.log
@@ -48,6 +49,7 @@ coverage/
 *.tmp
 *.temp
 .cache/
+.omc/
 
 # Harness GC workspace
 _workspace/

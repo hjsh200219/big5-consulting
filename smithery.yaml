@@ -9,3 +9,15 @@ repository:
   url: https://github.com/hjsh200219/big5-consulting.git
 
 runtime: typescript
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["dist/index.js"]
+    })
+  exampleConfig: {}

@@ -1,0 +1,51 @@
+{
+  "manifest_version": "0.3",
+  "name": "big5-consulting",
+  "display_name": "Big 5 Personality Consulting",
+  "version": "1.0.0",
+  "description": "Big Five personality assessment and consulting MCP server for individual, team, and relationship analysis.",
+  "long_description": "Provides local Big Five personality assessment workflows, profile management, individual analysis, team composition analysis, and relationship compatibility analysis. Assessment data is stored locally on the user's machine under ~/.big5.",
+  "author": {
+    "name": "hjsh200219"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hjsh200219/big5-consulting.git"
+  },
+  "homepage": "https://github.com/hjsh200219/big5-consulting#readme",
+  "support": "https://github.com/hjsh200219/big5-consulting/issues",
+  "server": {
+    "type": "node",
+    "entry_point": "server/dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/dist/index.js"
+      ],
+      "env": {}
+    }
+  },
+  "tools_generated": true,
+  "keywords": [
+    "mcp",
+    "big5",
+    "personality",
+    "psychology",
+    "consulting",
+    "assessment",
+    "team-analysis",
+    "career",
+    "korean"
+  ],
+  "license": "ISC",
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
