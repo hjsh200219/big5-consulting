@@ -2,6 +2,26 @@
 
 Claude Desktop용 Big 5 성격검사 및 종합 컨설팅 MCP 서버
 
+## English Overview
+
+Big 5 Personality Consulting MCP Server is a Model Context Protocol server for Claude Desktop, Claude Code, and other MCP-compatible clients. It provides Big Five personality surveys, local profile management, and rule-based consulting for individuals, teams, and relationships.
+
+The survey supports Korean (`ko`) and English (`en`) display text while preserving the same question numbers and scoring logic. All analysis is deterministic and rule-based; no external AI or machine learning service is used for scoring.
+
+**Core capabilities:**
+- Run a full 60-question or short 30-question Big Five survey
+- Store completed profiles locally under `~/.big5/`
+- Analyze personality traits, strengths, career fit, learning style, and stress patterns
+- Compare team composition, roles, conflict risks, communication, and collaboration
+- Analyze relationship compatibility, communication style, and dynamics
+
+**MCP tools:**
+- `manage_survey`: start, submit, resume, and check survey progress
+- `manage_profile`: create, read, update, delete, and list profiles
+- `analyze_individual`: generate individual personality consulting reports
+- `analyze_team`: generate team-level consulting reports
+- `analyze_relationship`: generate two-person relationship analysis
+
 ## 기능 개요
 
 ### 5가지 MCP Tools
