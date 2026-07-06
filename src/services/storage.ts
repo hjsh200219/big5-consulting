@@ -20,8 +20,8 @@ export class StorageManager {
   private readonly profilePath: string;
   private readonly surveyPath: string;
 
-  constructor() {
-    this.baseDir = path.join(homedir(), '.big5');
+  constructor(baseDir: string = path.join(homedir(), '.big5')) {
+    this.baseDir = baseDir;
     this.profilePath = path.join(this.baseDir, 'profiles');
     this.surveyPath = path.join(this.baseDir, 'surveys');
   }
@@ -102,7 +102,7 @@ export class StorageManager {
    * @returns 모든 프로필 배열
    */
   async listProfiles(): Promise<Profile[]> {
-    const files = await fs.readdir(this.profilePath);
+    const files = (await fs.readdir(this.profilePath)).sort();
     const profiles: Profile[] = [];
 
     for (const file of files) {
@@ -185,7 +185,7 @@ export class StorageManager {
    * @returns 모든 세션 배열
    */
   async listSurveySessions(): Promise<SurveySession[]> {
-    const files = await fs.readdir(this.surveyPath);
+    const files = (await fs.readdir(this.surveyPath)).sort();
     const sessions: SurveySession[] = [];
 
     for (const file of files) {

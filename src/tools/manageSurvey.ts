@@ -1,7 +1,20 @@
 import { randomUUID } from 'crypto';
-import { ManageSurveyParams, SurveySession, Profile } from '../types';
+import { ManageSurveyParams, SurveySession, Profile, Big5Scores, SurveyLanguage } from '../types';
 import { StorageManager } from '../services/storage';
 import { getRandomQuestions, mapAnswersToTraits, calculateScores } from '../data/questions';
+
+const SCORE_TRAITS: (keyof Big5Scores)[] = [
+  'openness',
+  'conscientiousness',
+  'extraversion',
+  'agreeableness',
+  'neuroticism'
+];
+
+const SURVEY_INSTRUCTIONS: Record<SurveyLanguage, string> = {
+  ko: '각 질문에 대해 1-5로 답변해주세요.\n1 = 전혀 그렇지 않다, 2 = 그렇지 않다, 3 = 보통이다, 4 = 그렇다, 5 = 매우 그렇다\n쉼표로 구분하여 답변하세요 (예: 4,5,3,4,5)',
+  en: 'Answer each question from 1 to 5.\n1 = Strongly disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly agree\nSeparate answers with commas (example: 4,5,3,4,5)'
+};
 
 export class SurveyManager {
   constructor(private storage: StorageManager) {}
@@ -33,17 +46,19 @@ export class SurveyManager {
       throw new Error('name is required for start action');
     }
 
-    const version = params.version || 'full';
+    const version = this.resolveVersion(params.version);
+    const language = this.resolveLanguage(params.language);
     const maxQuestions = version === 'short' ? 30 : 60;
     const isShort = version === 'short';
 
     // 첫 5문항 랜덤 제공 (빈 배열 = 아직 답변한 질문 없음)
-    const questions = getRandomQuestions([], isShort);
+    const questions = getRandomQuestions([], isShort, language);
 
     const session: SurveySession = {
       id: `survey_${randomUUID()}`,
       name: params.name,
       version,
+      language,
       answered_count: 0,
       answers: {},
       current_questions: questions.map(q => q.number), // 현재 질문 번호 저장
@@ -58,9 +73,10 @@ export class SurveyManager {
       session_id: session.id,
       name: session.name,
       version,
+      language,
       progress: `0/${maxQuestions}`,
       questions,
-      instruction: '각 질문에 대해 1-5로 답변해주세요.\n1 = 전혀 그렇지 않다, 2 = 그렇지 않다, 3 = 보통이다, 4 = 그렇다, 5 = 매우 그렇다\n쉼표로 구분하여 답변하세요 (예: 4,5,3,4,5)'
+      instruction: SURVEY_INSTRUCTIONS[language]
     };
   }
 
@@ -89,6 +105,7 @@ export class SurveyManager {
 
     const isShort = session.version === 'short';
     const maxQuestions = isShort ? 30 : 60;
+    const language = this.resolveLanguage(session.language);
 
     // 현재 화면에 보여준 질문 번호 목록 (세션에 저장되어 있음)
     const currentQuestionNumbers = session.current_questions || [];
@@ -118,13 +135,14 @@ export class SurveyManager {
       const traitResponses = mapAnswersToTraits(session.answers, isShort);
 
       // 점수 계산
-      const scores = calculateScores(traitResponses);
+      const scores = calculateScores(traitResponses, isShort);
+      const completeScores = this.requireCompleteScores(scores);
 
       // 프로필 생성
       const profile: Profile = {
         id: `prof_${randomUUID()}`,
         name: session.name,
-        scores: scores as any,
+        scores: completeScores,
         metadata: session.metadata,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -137,6 +155,7 @@ export class SurveyManager {
         session_id: session.id,
         completed: true,
         version: session.version,
+        language,
         progress: `${maxQuestions}/${maxQuestions}`,
         profile_id: profile.id,
         scores: profile.scores,
@@ -146,7 +165,7 @@ export class SurveyManager {
       // 아직 완료되지 않음 - 다음 질문 로드
       // 이미 답변한 질문 번호 배열 생성
       const answeredQuestionNumbers = Object.keys(session.answers).map(Number);
-      const nextQuestions = getRandomQuestions(answeredQuestionNumbers, isShort);
+      const nextQuestions = getRandomQuestions(answeredQuestionNumbers, isShort, language);
 
       // 다음 질문 번호를 세션에 저장
       session.current_questions = nextQuestions.map(q => q.number);
@@ -155,6 +174,7 @@ export class SurveyManager {
       return {
         session_id: session.id,
         version: session.version,
+        language,
         progress: `${session.answered_count}/${maxQuestions}`,
         next_questions: nextQuestions
       };
@@ -178,10 +198,11 @@ export class SurveyManager {
 
     const isShort = session.version === 'short';
     const maxQuestions = isShort ? 30 : 60;
+    const language = this.resolveLanguage(session.language);
 
     // 이미 답변한 질문 번호 배열 생성
     const answeredQuestionNumbers = Object.keys(session.answers).map(Number);
-    const questions = getRandomQuestions(answeredQuestionNumbers, isShort);
+    const questions = getRandomQuestions(answeredQuestionNumbers, isShort, language);
 
     // 새로운 질문 번호를 세션에 저장
     session.current_questions = questions.map(q => q.number);
@@ -191,9 +212,10 @@ export class SurveyManager {
       session_id: session.id,
       name: session.name,
       version: session.version,
+      language,
       progress: `${session.answered_count}/${maxQuestions}`,
       questions,
-      instruction: '각 질문에 대해 1-5로 답변해주세요.\n1 = 전혀 그렇지 않다, 2 = 그렇지 않다, 3 = 보통이다, 4 = 그렇다, 5 = 매우 그렇다\n쉼표로 구분하여 답변하세요 (예: 4,5,3,4,5)'
+      instruction: SURVEY_INSTRUCTIONS[language]
     };
   }
 
@@ -213,15 +235,44 @@ export class SurveyManager {
     }
 
     const maxQuestions = session.version === 'short' ? 30 : 60;
+    const language = this.resolveLanguage(session.language);
 
     return {
       session_id: session.id,
       name: session.name,
       version: session.version,
+      language,
       progress: `${session.answered_count}/${maxQuestions}`,
       percentage: Math.round((session.answered_count / maxQuestions) * 100),
       started_at: session.created_at,
       last_updated: session.updated_at
     };
+  }
+
+  private requireCompleteScores(scores: Partial<Big5Scores>): Big5Scores {
+    const missingTraits = SCORE_TRAITS.filter(trait => scores[trait] === undefined);
+    if (missingTraits.length > 0) {
+      throw new Error(`Cannot complete survey. Missing scores: ${missingTraits.join(', ')}`);
+    }
+
+    return {
+      openness: scores.openness!,
+      conscientiousness: scores.conscientiousness!,
+      extraversion: scores.extraversion!,
+      agreeableness: scores.agreeableness!,
+      neuroticism: scores.neuroticism!
+    };
+  }
+
+  private resolveVersion(version: ManageSurveyParams['version']): 'short' | 'full' {
+    if (!version) return 'full';
+    if (version === 'short' || version === 'full') return version;
+    throw new Error('version must be "short" or "full"');
+  }
+
+  private resolveLanguage(language: ManageSurveyParams['language']): SurveyLanguage {
+    if (!language) return 'ko';
+    if (language === 'ko' || language === 'en') return language;
+    throw new Error('language must be "ko" or "en"');
   }
 }

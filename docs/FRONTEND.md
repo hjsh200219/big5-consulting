@@ -16,7 +16,7 @@
 ### 1. manage_survey -- 설문 세션 관리
 | 액션 | 필수 파라미터 | 선택 파라미터 | 설명 |
 |------|-------------|-------------|------|
-| `start` | `name` | `version`, `metadata` | 새 설문 세션 시작, 5문항 반환 |
+| `start` | `name` | `version`, `language`, `metadata` | 새 설문 세션 시작, 5문항 반환 |
 | `submit` | `session_id`, `answers[5]` | -- | 5문항 답변 제출, 다음 5문항 반환 |
 | `resume` | `session_id` | -- | 기존 세션 재개, 현재 5문항 반환 |
 | `progress` | `session_id` | -- | 진행 상황 조회 |
@@ -80,6 +80,8 @@ start(name) → { session_id, questions[5] }
 submit(session_id, answers[5]) → { remaining, questions[5] }  (반복)
 submit(session_id, answers[5]) → { profile_id, scores }       (완료 시)
 ```
+
+`language`는 `ko` 또는 `en`을 지원하며, 생략 시 한국어(`ko`)로 설문을 시작합니다.
 
 ## 배포 채널
 

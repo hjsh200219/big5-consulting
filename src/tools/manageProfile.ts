@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { ManageProfileParams, Profile } from '../types';
 import { StorageManager } from '../services/storage';
 
@@ -29,7 +30,7 @@ export class ProfileManager {
     }
 
     const profile: Profile = {
-      id: `prof_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `prof_${randomUUID()}`,
       name: params.name,
       scores: params.scores,
       metadata: params.metadata || {},

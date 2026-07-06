@@ -18,6 +18,16 @@ export function getToolSchemas(): Tool[] {
             type: 'string',
             description: '검사 대상자 이름 (start 시 필수)'
           },
+          version: {
+            type: 'string',
+            enum: ['short', 'full'],
+            description: '검사 버전: short=30문항, full=60문항 (start 시 선택, 기본값 full)'
+          },
+          language: {
+            type: 'string',
+            enum: ['ko', 'en'],
+            description: '설문 표시 언어: ko=한국어, en=영어 (start 시 선택, 기본값 ko)'
+          },
           session_id: {
             type: 'string',
             description: '세션 ID (submit, resume, progress 시 필수)'

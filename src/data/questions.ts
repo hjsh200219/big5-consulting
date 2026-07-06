@@ -1,4 +1,78 @@
-import { Question } from '../types';
+import { Big5Scores, Question, SurveyLanguage } from '../types';
+
+type Big5Trait = keyof Big5Scores;
+
+const TRAITS: Big5Trait[] = [
+  'openness',
+  'conscientiousness',
+  'extraversion',
+  'agreeableness',
+  'neuroticism'
+];
+
+const ENGLISH_QUESTION_TEXT: Record<string, string> = {
+  '새로운 아이디어와 경험에 흥미를 느낀다': 'I am interested in new ideas and experiences',
+  '상상력이 풍부하고 창의적이다': 'I have a vivid imagination and am creative',
+  '예술 작품을 보며 깊은 감동을 느낀다': 'I am deeply moved by works of art',
+  '여행지에서 현지 음식과 문화를 적극적으로 체험한다': 'When traveling, I actively try local food and culture',
+  '철학적이거나 심오한 대화를 즐긴다': 'I enjoy philosophical or deep conversations',
+  '일상적인 루틴을 벗어나는 것이 불편하다': 'I feel uncomfortable when I break from familiar routines',
+  '복잡한 문제도 체계적으로 해결할 수 있다': 'I can solve complex problems systematically',
+  '물건을 정해진 위치에 정리해두는 습관이 있다': 'I have a habit of keeping things in their assigned places',
+  '약속 시간 10분 전에는 항상 도착한다': 'I usually arrive ten minutes before appointments',
+  '목표를 달성하기 위해 불편함을 감수할 수 있다': 'I can tolerate discomfort to achieve my goals',
+  '유혹이 있어도 해야 할 일을 먼저 한다': 'Even when tempted, I do what needs to be done first',
+  '결정하기 전에 여러 가능성을 신중히 검토한다': 'I carefully review several possibilities before making a decision',
+  '모임에서 여러 사람과 대화하는 것을 즐긴다': 'I enjoy talking with many people at gatherings',
+  '그룹 토론에서 먼저 의견을 제시하는 편이다': 'I tend to share my opinion first in group discussions',
+  '하루 종일 집에만 있으면 답답함을 느낀다': 'I feel restless if I stay home all day',
+  '새롭고 자극적인 경험을 찾아다닌다': 'I seek out new and exciting experiences',
+  '사람들과 함께 있으면 에너지가 충전된다': 'Being with people recharges my energy',
+  '처음 만난 사람과도 쉽게 친해진다': 'I easily get along with people I have just met',
+  '사람들의 말을 대부분 진심으로 받아들인다': 'I usually take what people say at face value',
+  '솔직하게 내 생각을 표현하되 상대방을 배려한다': 'I express my thoughts honestly while considering others',
+  '내 시간과 노력을 들여 다른 사람을 돕는다': 'I spend my own time and effort to help others',
+  '의견 충돌 시 상대방 입장을 먼저 이해하려 한다': 'In disagreements, I first try to understand the other person\'s position',
+  '내 성과를 다른 사람과 나누는 것을 좋아한다': 'I like to share credit for my accomplishments with others',
+  '상대방의 감정을 빠르게 알아차린다': 'I quickly notice how others are feeling',
+  '중요한 일을 앞두면 불안해서 잠을 못 잔다': 'Before important events, anxiety keeps me from sleeping',
+  '사소한 일에도 화가 나서 표현하는 편이다': 'I tend to get angry and show it even over small things',
+  '실패하면 오랫동안 우울한 기분이 지속된다': 'When I fail, I feel depressed for a long time',
+  '다른 사람 앞에서 말할 때 실수할까 봐 걱정된다': 'I worry about making mistakes when speaking in front of others',
+  '화가 나면 생각하기 전에 행동한다': 'When angry, I act before thinking',
+  '예상치 못한 문제가 생기면 당황한다': 'I panic when unexpected problems arise',
+  '시나 소설보다는 실용서를 선호한다': 'I prefer practical books over poetry or novels',
+  '영화나 음악에 쉽게 감정이입한다': 'I easily become emotionally immersed in movies or music',
+  '감정 표현이 과한 사람들을 이해하기 어렵다': 'I find it hard to understand people who express emotions intensely',
+  '검증된 방법만 사용하는 것이 안전하다고 생각한다': 'I think it is safer to use only proven methods',
+  '복잡한 이론보다 실용적인 지식이 중요하다': 'Practical knowledge matters more to me than complex theories',
+  '다양한 관점과 가치관을 존중한다': 'I respect diverse perspectives and values',
+  '전통적인 방식을 따르는 것이 바람직하다': 'I believe it is best to follow traditional ways',
+  '일을 시작하면 어떻게 해야 할지 막막할 때가 많다': 'When I start a task, I often feel unsure what to do',
+  '책상이나 작업 공간이 어질러져 있어도 신경 쓰이지 않는다': 'I am not bothered when my desk or workspace is messy',
+  '중요하지 않은 약속은 취소해도 괜찮다고 생각한다': 'I think it is okay to cancel commitments that do not seem important',
+  '완벽하게 하려다 마감을 놓친 적이 있다': 'I have missed deadlines because I was trying to make things perfect',
+  '어려운 과제는 다음으로 미루는 편이다': 'I tend to put off difficult tasks',
+  '충분히 생각하기 전에 먼저 행동하는 편이다': 'I tend to act before thinking things through',
+  '낯선 사람과 대화하는 것이 부담스럽다': 'Talking with strangers feels burdensome to me',
+  '혼자만의 시간을 가지는 것이 중요하다': 'Having time to myself is important to me',
+  '모임에서 조용히 관찰하는 편이다': 'At gatherings, I tend to quietly observe',
+  '차분하고 느긋한 활동을 선호한다': 'I prefer calm and relaxed activities',
+  '평온하고 조용한 환경을 더 좋아한다': 'I prefer peaceful and quiet environments',
+  '사교 모임 후에는 휴식이 필요하다': 'I need rest after social gatherings',
+  '사람들의 숨겨진 의도를 파악하려 한다': 'I try to identify hidden motives behind what people say',
+  '내게 유리하도록 상황을 조작할 때가 있다': 'I sometimes manipulate situations to my advantage',
+  '다른 사람의 고민을 듣는 것이 부담스럽다': 'Listening to other people\'s concerns feels burdensome to me',
+  '논쟁에서 이기는 것이 중요하다': 'Winning an argument is important to me',
+  '내가 다른 사람보다 뛰어나다고 생각한다': 'I believe I am better than other people',
+  '감정보다 논리가 더 중요하다고 생각한다': 'I believe logic is more important than emotions',
+  '걱정거리가 있어도 일상생활에 영향을 받지 않는다': 'Even when I have worries, they do not affect my daily life',
+  '화가 나도 침착하게 대처한다': 'I stay calm even when I am angry',
+  '어려운 상황에서도 긍정적인 면을 찾는다': 'I find positive aspects even in difficult situations',
+  '비판을 받아도 감정적으로 흔들리지 않는다': 'I do not get emotionally shaken by criticism',
+  '감정이 격해져도 통제할 수 있다': 'I can control myself even when my emotions run high',
+  '스트레스를 받아도 빠르게 회복한다': 'I recover quickly after stress'
+};
 
 /**
  * Big 5 성격검사 질문지
@@ -6,7 +80,7 @@ import { Question } from '../types';
  * - 간략 버전: 30문항 (각 특성당 6문항 -- 6개 하위요인 x 1문항)
  */
 interface QuestionWithTrait extends Question {
-  trait: string;
+  trait: Big5Trait;
   trait_index: number; // 해당 특성 내에서의 인덱스 (0-9)
 }
 
@@ -165,14 +239,45 @@ export const QUESTIONS: Record<string, Question[]> = {
   neuroticism: ALL_QUESTIONS.filter(q => q.trait === 'neuroticism')
 };
 
+function getQuestionPool(short_version: boolean): QuestionWithTrait[] {
+  return short_version ? SHORT_QUESTIONS : ALL_QUESTIONS;
+}
+
+function localizeQuestionText(question: Question, language: SurveyLanguage): string {
+  return language === 'en' ? ENGLISH_QUESTION_TEXT[question.text] ?? question.text : question.text;
+}
+
+function toPublicQuestion(question: Question, language: SurveyLanguage = 'ko'): Question {
+  return {
+    number: question.number,
+    text: localizeQuestionText(question, language),
+    reverse_scored: question.reverse_scored
+  };
+}
+
+function shuffleQuestions(questions: QuestionWithTrait[]): QuestionWithTrait[] {
+  const shuffled = [...questions];
+
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
 /**
  * 랜덤하게 5개 질문 선택 (중복 방지)
  * @param answered_questions 이미 답변한 질문 번호 배열
  * @param short_version true일 경우 30문항 간략 버전 사용
  * @returns 최대 5개 질문 배열 (질문 번호, 텍스트만 포함)
  */
-export function getRandomQuestions(answered_questions: number[], short_version: boolean = false): Question[] {
-  const questionPool = short_version ? SHORT_QUESTIONS : ALL_QUESTIONS;
+export function getRandomQuestions(
+  answered_questions: number[],
+  short_version: boolean = false,
+  language: SurveyLanguage = 'ko'
+): Question[] {
+  const questionPool = getQuestionPool(short_version);
   const maxQuestions = short_version ? 30 : 60;
 
   // 이미 모든 질문에 답변한 경우 빈 배열 반환
@@ -184,34 +289,26 @@ export function getRandomQuestions(answered_questions: number[], short_version: 
   const unansweredQuestions = questionPool.filter(q => !answered_questions.includes(q.number));
 
   // 남은 질문을 랜덤하게 섞음
-  const shuffled = [...unansweredQuestions].sort(() => Math.random() - 0.5);
+  const shuffled = shuffleQuestions(unansweredQuestions);
 
   // 최대 5개 선택 (또는 남은 질문 수만큼)
   const batchSize = Math.min(5, shuffled.length);
   const batch = shuffled.slice(0, batchSize);
 
   // 측정 항목(trait) 정보를 제외하고 반환
-  return batch.map(q => ({
-    number: q.number,
-    text: q.text,
-    reverse_scored: q.reverse_scored
-  }));
+  return batch.map(question => toPublicQuestion(question, language));
 }
 
 /**
  * 간략 버전(30문항) 전체 질문 반환
  * @returns 30개 질문 배열 (랜덤 순서)
  */
-export function getShortQuestions(): Question[] {
+export function getShortQuestions(language: SurveyLanguage = 'ko'): Question[] {
   // 30문항을 랜덤하게 섞음
-  const shuffled = [...SHORT_QUESTIONS].sort(() => Math.random() - 0.5);
+  const shuffled = shuffleQuestions(SHORT_QUESTIONS);
 
   // 측정 항목(trait) 정보를 제외하고 반환
-  return shuffled.map(q => ({
-    number: q.number,
-    text: q.text,
-    reverse_scored: q.reverse_scored
-  }));
+  return shuffled.map(question => toPublicQuestion(question, language));
 }
 
 /**
@@ -220,14 +317,18 @@ export function getShortQuestions(): Question[] {
  * @param short_version true일 경우 30문항 간략 버전에서 검색
  * @returns 특성명과 특성 내 인덱스
  */
-export function getQuestionInfo(question_number: number, short_version: boolean = false): { trait: string; trait_index: number } | null {
-  const questionPool = short_version ? SHORT_QUESTIONS : ALL_QUESTIONS;
+export function getQuestionInfo(
+  question_number: number,
+  short_version: boolean = false
+): { trait: Big5Trait; trait_index: number; reverse_scored: boolean } | null {
+  const questionPool = getQuestionPool(short_version);
   const question = questionPool.find(q => q.number === question_number);
   if (!question) return null;
 
   return {
     trait: question.trait,
-    trait_index: question.trait_index
+    trait_index: question.trait_index,
+    reverse_scored: question.reverse_scored
   };
 }
 
@@ -235,12 +336,12 @@ export function getQuestionInfo(question_number: number, short_version: boolean 
  * 특성별 질문을 배치로 나누기 (각 5문항씩)
  * @deprecated 랜덤 출제를 위해 getRandomQuestions 사용 권장
  */
-export function getQuestionBatch(trait: string, batch: 1 | 2): Question[] {
+export function getQuestionBatch(trait: string, batch: 1 | 2, language: SurveyLanguage = 'ko'): Question[] {
   const questions = QUESTIONS[trait];
   if (!questions) return [];
 
   const startIndex = batch === 1 ? 0 : 5;
-  return questions.slice(startIndex, startIndex + 5);
+  return questions.slice(startIndex, startIndex + 5).map(question => toPublicQuestion(question, language));
 }
 
 /**
@@ -252,15 +353,9 @@ export function getQuestionBatch(trait: string, batch: 1 | 2): Question[] {
 export function mapAnswersToTraits(
   answers: Record<number, number>,
   short_version: boolean = false
-): Partial<{
-  openness: number[];
-  conscientiousness: number[];
-  extraversion: number[];
-  agreeableness: number[];
-  neuroticism: number[];
-}> {
+): Partial<Record<Big5Trait, number[]>> {
   const arraySize = short_version ? 6 : 12;
-  const mapped: any = {
+  const mapped: Record<Big5Trait, Array<number | null>> = {
     openness: new Array(arraySize).fill(null),
     conscientiousness: new Array(arraySize).fill(null),
     extraversion: new Array(arraySize).fill(null),
@@ -277,10 +372,10 @@ export function mapAnswersToTraits(
   }
 
   // null이 없는(완료된) 특성만 반환
-  const result: any = {};
+  const result: Partial<Record<Big5Trait, number[]>> = {};
   for (const [trait, values] of Object.entries(mapped)) {
     if (Array.isArray(values) && values.every((v: number | null) => v !== null)) {
-      result[trait] = values;
+      result[trait as Big5Trait] = values as number[];
     }
   }
 
@@ -292,35 +387,27 @@ export function mapAnswersToTraits(
  * @param responses 특성별 응답 배열
  * @returns 특성별 점수 (0-100)
  */
-export function calculateScores(responses: Partial<{
-  openness: number[];
-  conscientiousness: number[];
-  extraversion: number[];
-  agreeableness: number[];
-  neuroticism: number[];
-}>): Partial<{
-  openness: number;
-  conscientiousness: number;
-  extraversion: number;
-  agreeableness: number;
-  neuroticism: number;
-}> {
-  const scores: any = {};
-  const traits = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
+export function calculateScores(
+  responses: Partial<Record<Big5Trait, number[]>>,
+  short_version?: boolean
+): Partial<Big5Scores> {
+  const scores: Partial<Big5Scores> = {};
 
-  for (const trait of traits) {
-    const answers = responses[trait as keyof typeof responses];
+  for (const trait of TRAITS) {
+    const answers = responses[trait];
     // 12문항 (전체) 또는 6문항 (간략)
     if (!answers || (answers.length !== 12 && answers.length !== 6)) continue;
 
-    // 역채점 문항 인덱스
-    // 12문항: 홀수 인덱스 (1, 3, 5, 7, 9, 11)
-    // 6문항: 5번 인덱스만 (마지막 문항)
-    const reverseIndices = answers.length === 12 ? [1, 3, 5, 7, 9, 11] : [5];
+    const useShortVersion = short_version ?? answers.length === 6;
+    const reverseIndices = new Set(
+      getQuestionPool(useShortVersion)
+        .filter(question => question.trait === trait && question.reverse_scored)
+        .map(question => question.trait_index)
+    );
 
     // 점수 계산
     const scored = answers.map((value, index) => {
-      return reverseIndices.includes(index) ? 6 - value : value;
+      return reverseIndices.has(index) ? 6 - value : value;
     });
 
     // 평균 계산 후 0-100 스케일로 변환

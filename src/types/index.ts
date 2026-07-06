@@ -7,6 +7,8 @@ export interface Big5Scores {
   neuroticism: number; // 신경성 (0-100)
 }
 
+export type SurveyLanguage = 'ko' | 'en';
+
 // 프로필
 export interface Profile {
   id: string;
@@ -36,6 +38,7 @@ export interface SurveySession {
   id: string;
   name: string;
   version: 'short' | 'full'; // 간략(30문항) 또는 전체(60문항)
+  language?: SurveyLanguage; // 설문 표시 언어, 기본값 ko
   answered_count: number; // 답변 완료한 질문 수 (0-30 or 0-60)
   answers: Record<number, number>; // 질문 번호 → 답변 (1-5) 매핑
   current_questions?: number[]; // 현재 화면에 보여준 질문 번호 배열 (중복 방지용)
@@ -74,6 +77,7 @@ export interface ManageSurveyParams {
   action: SurveyAction;
   name?: string;
   version?: 'short' | 'full'; // 간략(30문항) 또는 전체(60문항), 기본값 'full'
+  language?: SurveyLanguage; // 설문 표시 언어, 기본값 'ko'
   session_id?: string;
   answers?: number[];
   metadata?: Record<string, any>;
