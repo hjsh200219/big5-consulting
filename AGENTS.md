@@ -10,11 +10,17 @@ Model Context Protocol 서버. Claude Desktop 통합용으로 설계됨.
 - **TypeScript** (strict mode, ES2022, CommonJS) / **MCP SDK** v1.20.0 (stdio)
 - **Storage**: 파일 시스템 JSON (~/.big5/) + 메모리 캐시 (Map)
 - **Analysis**: 규칙 기반 의사결정 트리 (ML/AI 미사용)
+- **Survey**: 전체 60문항 / 간략 30문항, 표시 언어는 `ko`(기본) 또는 `en`; 언어는 질문/안내 문구만 바꾸고 점수 계산은 동일한 문항 번호를 사용
+- **Distribution**: npm, Smithery, Claude Desktop MCPB, Claude Code plugin 지원
 
 ## 빌드
 
 ```bash
 npm run build    # TypeScript -> dist/
+npm test         # build + node --test tests/**/*.test.js
+npm run build:mcpb          # Claude Desktop MCPB 번들 생성
+npm run build:smithery-mcpb # Smithery 배포용 MCPB 생성
+npm run build:claude-plugin # Claude Code plugin zip 생성
 npm run dev      # tsx 자동 리로드
 npm start        # node dist/index.js
 ```
@@ -79,6 +85,11 @@ src/
 ### 버그 수정
 1. docs/RELIABILITY.md + docs/design-docs/layer-rules.md 확인
 2. 수정 후 `npm run build` 성공 확인
+
+### 설문/언어 변경
+1. `src/types/index.ts` -> `src/schemas/index.ts` -> `src/data/questions.ts` -> `src/tools/manageSurvey.ts` 순서로 확인
+2. 질문 문구 언어 추가/변경 시 문항 번호와 scoring 매핑은 변경하지 않음
+3. `npm test`로 빌드와 설문/질문 테스트까지 확인
 
 ### 리팩토링
 1. ARCHITECTURE.md + docs/design-docs/layer-rules.md 확인
@@ -164,12 +175,12 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 These guidelines are working if: fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
-## 세션 시작 시 Handoff 강제
+## 세션 시작 시 필수
 
-세션을 시작할 때 프로젝트 루트에 `handoff.md` 파일이 있는지 먼저 확인한다.
-- `handoff.md`가 존재하면 다른 어떤 작업보다 먼저 **반드시 전체를 읽고 인수인계 컨텍스트를 파악한 뒤 시작**한다.
-- 파일이 없으면 정상 진행한다.
+세션을 시작할 때 프로젝트 루트에 `handoff.md` 파일이 있는지 먼저 확인하고, 없으면 `.claude-project/HANDOFF.md`를 확인한다.
+- `handoff.md` 또는 `.claude-project/HANDOFF.md`가 존재하면 다른 어떤 작업보다 먼저 **반드시 전체를 읽고 인수인계 컨텍스트를 파악한 뒤 시작**한다.
+- 둘 다 없으면 정상 진행한다.
 
 이 규칙은 이전 세션의 미완료 작업·결정 사항·주의사항을 놓치지 않기 위한 강제 사항이다.
 
-**이 프로젝트의 handoff 위치**: 없음 (생성 시 `.claude-project/HANDOFF.md` 권장)
+**이 프로젝트의 handoff 위치**: `.claude-project/HANDOFF.md`
