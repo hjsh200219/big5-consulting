@@ -90,3 +90,5 @@ submit(session_id, answers[5]) → { profile_id, scores }       (완료 시)
 | npm | package.json | `@hjsh200219/big5-consulting` |
 | Docker | Dockerfile | node:18-alpine, multi-stage build |
 | Smithery | smithery.yaml | MCP 서버 레지스트리 |
+| Claude Desktop | mcpb/manifest.json | `.mcpb` 데스크톱 확장 번들 |
+| Claude Code | claude-code-plugin/ | plugin-provided MCP 서버 |

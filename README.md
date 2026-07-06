@@ -63,6 +63,36 @@ npx -y @smithery/cli@latest mcp add hjsh200219/big5-consulting --client claude
 
 또는 [Smithery 웹사이트](https://smithery.ai/servers/hjsh200219/big5-consulting)에서 "Install in Claude Desktop" 버튼을 클릭하세요.
 
+### Claude Desktop 확장(MCPB)으로 설치
+
+Claude Desktop의 Extensions 화면에서 직접 설치할 수 있는 MCPB 번들을 만들 수 있습니다.
+
+```bash
+npm run build:mcpb
+```
+
+생성된 `big5-consulting.mcpb` 파일을 Claude Desktop에서 설치합니다.
+
+1. Claude Desktop → Settings → Extensions
+2. Advanced settings → Extension Developer
+3. Install Extension… → `big5-consulting.mcpb` 선택
+
+### Claude Code Plugin으로 설치
+
+Claude Code plugin 패키지는 `claude-code-plugin/`에 있습니다. 로컬 테스트:
+
+```bash
+claude --plugin-dir ./claude-code-plugin
+```
+
+배포용 zip 생성:
+
+```bash
+npm run build:claude-plugin
+```
+
+생성된 `big5-consulting-claude-plugin.zip`은 Claude Code의 plugin URL/marketplace 배포 준비물로 사용할 수 있습니다. plugin은 MCP 서버를 `npx -y github:hjsh200219/big5-consulting#main`으로 실행합니다.
+
 ### 수동 설치
 
 ```bash
@@ -268,6 +298,12 @@ npm run build
 # Smithery 배포용 번들 생성
 npm run build:smithery-mcpb
 
+# Claude Desktop MCPB 번들 생성
+npm run build:mcpb
+
+# Claude Code plugin zip 생성
+npm run build:claude-plugin
+
 # 프로덕션 실행
 npm start
 ```
@@ -278,6 +314,20 @@ npm start
 npm run build:smithery-mcpb
 npx -y @smithery/cli@latest mcp publish ./big5-consulting-smithery.mcpb -n hjsh200219/big5-consulting
 ```
+
+### Anthropic / Claude 배포
+
+```bash
+# Claude Desktop 확장(MCPB)
+npm run build:mcpb
+
+# Claude Code plugin
+npm run build:claude-plugin
+```
+
+- `big5-consulting.mcpb`: Claude Desktop Extensions에서 설치 가능한 로컬 MCP 번들
+- `big5-consulting-claude-plugin.zip`: Claude Code plugin 배포용 아카이브
+- `claude-code-plugin/`: plugin 소스 디렉터리
 
 ## 기술 스택
 

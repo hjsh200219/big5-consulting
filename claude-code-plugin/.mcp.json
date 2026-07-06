@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "big5-consulting": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "github:hjsh200219/big5-consulting#main"
+      ],
+      "env": {
+        "BIG5_LAZY_LOAD_SCHEMAS": "false"
+      }
+    }
+  }
+}

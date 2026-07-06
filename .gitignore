@@ -6,6 +6,7 @@ package-lock.json
 dist/
 *.tsbuildinfo
 *.mcpb
+big5-consulting-claude-plugin.zip
 
 # Logs
 *.log
