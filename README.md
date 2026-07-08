@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hjsh200219-big5-consulting-badge.png)](https://mseep.ai/app/hjsh200219-big5-consulting)
+
 # Big 5 Personality Consulting MCP Server
 
 Claude Desktop용 Big 5 성격검사 및 종합 컨설팅 MCP 서버
